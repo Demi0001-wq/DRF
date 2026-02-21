@@ -8,18 +8,22 @@ A robust Learning Management System (LMS) backend built with Django and Django R
 - **Email Authentication**: Replaces the default Django username with email-based login.
 - **Extended Profiles**: Includes fields for `telephone`, `city`, and `avatar`.
 
-### 🎓 Learning Materials (`materials` app)
-- **Course & Lesson Relationship**: Lessons are organized under Courses using standard ForeignKey relationships.
-- **Hierarchical Content**: Supports descriptions, preview images, and video links for educational value.
+### 💰 Payments System (`users` app)
+- **Payment Tracking**: New `Payment` model tracks user payments for courses or individual lessons.
+- **Advanced Filtering**: Built-in payment list API with filtering by course, lesson, and payment method (cash/transfer).
+- **Sorting**: Flexible sorting by payment date.
 
 ### 🛠️ API Architecture
-- **ViewSet Pattern**: `Course` CRUD is implemented using `ModelViewSet` for rapid development and standard REST conventions.
-- **Generic View Pattern**: `Lesson` CRUD is implemented using granular Generic views (`CreateAPIView`, `ListAPIView`, etc.) for maximum control.
-- **Serializers**: Simple, efficient `ModelSerializer` implementations.
+- **ViewSet Pattern**: `Course` CRUD is implemented using `ModelViewSet`.
+- **Generic View Pattern**: `Lesson` CRUD is implemented using granular Generic views.
+- **Enhanced Serializers**: 
+    - `CourseSerializer` now includes `lessons_count` and nested `lessons` details.
+- **Filtering**: Integrated `django-filter` for the Payments API.
 
 ## 📦 Tech Stack
 - **Framework**: Django 5.x
 - **API**: Django REST Framework (DRF)
+- **Filtering**: django-filter
 - **Image Handling**: Pillow
 - **Database**: SQLite (Default)
 
@@ -41,7 +45,12 @@ A robust Learning Management System (LMS) backend built with Django and Django R
    python manage.py migrate
    ```
 
-4. **Start the server**:
+4. **Populate Data**:
+   ```bash
+   python manage.py fill_payments
+   ```
+
+5. **Start the server**:
    ```bash
    python manage.py run_server
    ```
@@ -49,16 +58,16 @@ A robust Learning Management System (LMS) backend built with Django and Django R
 ## 🔗 API Endpoints
 
 ### Courses
-- `GET /api/materials/courses/` - List all courses
+- `GET /api/materials/courses/` - List all courses (includes nested lessons)
 - `POST /api/materials/courses/` - Create a course
-- `PUT /api/materials/courses/<id>/` - Update a course
 
 ### Lessons
 - `GET /api/materials/lessons/` - List all lessons
 - `POST /api/materials/lessons/create/` - Create a lesson
-- `GET /api/materials/lessons/<id>/` - Retrieve a lesson
-- `PUT /api/materials/lessons/update/<id>/` - Update a lesson
-- `DELETE /api/materials/lessons/delete/<id>/` - Delete a lesson
+
+### Payments
+- `GET /api/users/payments/` - List payments with filtering support.
+  - Query params: `paid_course`, `paid_lesson`, `payment_method`, `ordering=payment_date`.
 
 ## 🧪 Testing
 A comprehensive **Postman Guide** is available in the project documentation for local endpoint verification.
