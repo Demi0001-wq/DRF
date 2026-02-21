@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -54,8 +55,19 @@ class LessonDestroyAPIView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated, IsOwner]
 
 class SubscriptionAPIView(APIView):
+    """
+    Endpoint for toggling course subscriptions.
+    If already subscribed, deletes the subscription.
+    If not subscribed, creates a new subscription.
+    """
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        summary="Toggle Course Subscription",
+        description="Toggles a user's subscription to a specific course.",
+        request={'application/json': {'type': 'object', 'properties': {'course': {'type': 'integer'}}, 'required': ['course']}},
+        responses={200: {'type': 'object', 'properties': {'message': {'type': 'string'}}}}
+    )
     def post(self, *args, **kwargs):
         user = self.request.user
         course_id = self.request.data.get('course')
