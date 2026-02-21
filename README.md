@@ -1,73 +1,53 @@
-# LMS Backend (Django REST Framework)
+# LMS Project
 
-A robust Learning Management System (LMS) backend built with Django and Django REST Framework. This project features a custom user model, a dedicated materials application with hierarchical lesson structure, and demonstration of multiple API architectural patterns.
+This is a backend project for a Learning Management System made with Django and Django REST Framework.
 
-## 🚀 Features
+## Features
 
-### 👤 Custom User Management
-- **Email Authentication**: Replaces the default Django username with email-based login.
-- **Extended Profiles**: Includes fields for `telephone`, `city`, and `avatar`.
+This project includes user management where you can log in with your email. I used SimpleJWT for authentication. There are different roles like Moderators and Owners to handle who can see or edit the courses.
 
-### 💰 Payments System (`users` app)
-- **Payment Tracking**: New `Payment` model tracks user payments for courses or individual lessons.
-- **Advanced Filtering**: Built-in payment list API with filtering by course, lesson, and payment method (cash/transfer).
-- **Sorting**: Flexible sorting by payment date.
+The materials app has Courses and Lessons. I added a way for users to subscribe to courses. I also made a validator to make sure video links are only from youtube.com.
 
-### 🛠️ API Architecture
-- **ViewSet Pattern**: `Course` CRUD is implemented using `ModelViewSet`.
-- **Generic View Pattern**: `Lesson` CRUD is implemented using granular Generic views.
-- **Enhanced Serializers**: 
-    - `CourseSerializer` now includes `lessons_count` and nested `lessons` details.
-- **Filtering**: Integrated `django-filter` for the Payments API.
+For payments, I integrated Stripe. It can create products and prices, and then give a checkout link. You can also check the status of a payment.
 
-## 📦 Tech Stack
-- **Framework**: Django 5.x
-- **API**: Django REST Framework (DRF)
-- **Filtering**: django-filter
-- **Image Handling**: Pillow
-- **Database**: SQLite (Default)
+Documentation is handled by drf-spectacular. You can see the Swagger or Redoc pages to check the endpoints.
 
-## 🛠️ Setup & Installation
+## Tech Stack
+- Django and DRF
+- SimpleJWT for auth
+- Stripe for payments
+- drf-spectacular for docs
+- SQLite
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/Demi0001-wq/DRF.git
-   cd DRF
-   ```
+## How to setup
 
-2. **Install dependencies**:
-   ```bash
+1. Install everything from requirements.txt:
    pip install -r requirements.txt
-   ```
 
-3. **Run migrations**:
-   ```bash
+2. Put your Stripe key in config/settings.py:
+   STRIPE_API_KEY = 'your_key_here'
+
+3. Run the migrations:
    python manage.py migrate
-   ```
 
-4. **Populate Data**:
-   ```bash
+4. You can fill some test payment data:
    python manage.py fill_payments
-   ```
 
-5. **Start the server**:
-   ```bash
-   python manage.py run_server
-   ```
+5. Start the server:
+   python manage.py runserver
 
-## 🔗 API Endpoints
+## Endpoints
 
-### Courses
-- `GET /api/materials/courses/` - List all courses (includes nested lessons)
-- `POST /api/materials/courses/` - Create a course
+- Login: /api/users/login/
+- Token Refresh: /api/users/token/refresh/
+- Courses: /api/materials/courses/
+- Lessons: /api/materials/lessons/
+- Subscribe: /api/materials/course/subscribe/
+- Create Payment: /api/users/payments/create/
+- Payment Status: /api/users/payments/status/id/
 
-### Lessons
-- `GET /api/materials/lessons/` - List all lessons
-- `POST /api/materials/lessons/create/` - Create a lesson
+## Testing
+You can run tests with:
+python manage.py test
 
-### Payments
-- `GET /api/users/payments/` - List payments with filtering support.
-  - Query params: `paid_course`, `paid_lesson`, `payment_method`, `ordering=payment_date`.
-
-## 🧪 Testing
-A comprehensive **Postman Guide** is available in the project documentation for local endpoint verification.
+I also used coverage to check how much of the code is tested.
