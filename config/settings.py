@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'core',
     'users',
     'materials',
+    'django_filters',
 ]
 
 AUTH_USER_MODEL = 'users.User'
